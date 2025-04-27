@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIPHERS HISTORY</title>
+    <link rel="stylesheet" href="CSS/carousel.css">
+    <script src="./JS/carousel.js"></script>
+    <script src="loading-interceptor.js"></script>
+    <audio src="./SRC/music/index_bgm.MP3" loop autoplay></audio>
+</head>
+<body>
+    <a href="./text.html" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #00ff00;
+        text-decoration: none;
+        border-radius: 5px;
+        z-index: 1000;
+        font-weight: bold;
+    ">BACK</a>
+
+    <article style="text-align: center;">
+        <h1 style="
+                color: #17f629;
+                text-shadow: 
+                    0 0 5px #227022,
+                    0 0 10px #0bf30b,
+                    0 0 20px #00ff00,
+                    1px 1px 0px #fff,
+                    -1px -1px 0px rgba(255,255,255,0.3);
+                font-weight: bold;
+                animation: float 3s ease-in-out infinite;
+                position: relative;
+                display: inline-block;
+                margin: 0 auto;
+            ">Main Ciphers Introduction</h1>
+        <p style="
+                color: #3ce13c;
+                text-shadow: 
+                    0 0 5px #227022,
+                    0 0 10px #0bf30b,
+                    0 0 20px #00ff00,
+                    1px 1px 0px #fff,
+                    -1px -1px 0px rgba(255,255,255,0.3);
+                font-weight: bold;
+                animation: float 3s ease-in-out infinite;
+                position: relative;
+                font-size: 2.2em;
+                margin: 10px auto 0;
+                display: block;
+            ">几种主要密码的介绍</p>
+        <a href="./encrypt.html" style="
+            color: rgba(230, 59, 59, 0.927);
+            text-decoration: underline;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+            text-shadow: 
+                0 0 5px rgba(230, 59, 59, 0.5),
+                0 0 10px rgba(230, 59, 59, 0.3),
+                0 0 15px rgba(230, 59, 59, 0.2);
+            animation: float 3s ease-in-out infinite;
+        ">---点击此处尝试私钥加解密---</a>
+      </article>
+
+      <div class="container">
+		<div id="carousel">
+			<figure><img src="./SRC/pic/caesar.jpg" alt="点击Read more查看详情">
+                <h1>The Caesar cipher</h1>
+                <h3>An ancient substitution cipher </h3>
+                <p>encryption method, vulnerable to frequency analysis.</p>
+                <a href="./ciphermore/caesar.html" class="read-more">Read more</a>
+            </figure>
+            <figure><img src="./SRC/pic/RSA.jpg" alt="点击Read more查看详情">
+                <h1>RSA</h1>
+                <h3>an asymmetric algorithm using public/private keys</h3>
+                <p>Its security relies on factoring large primes.</p>
+                <a href="./ciphermore/RSA.html" class="read-more">Read more</a>
+            </figure>
+            <figure><img src="./SRC/pic/el.jpg" alt="点击Read more查看详情">
+                <h1>ElGamal</h1>
+                <h3>an asymmetric cipher based on Diffie-Hellman</h3>
+                <p>It's slower than RSA but offers forward secrecy.</p>
+                <a href="./ciphermore/Elgamal.html" class="read-more">Read more</a>
+            </figure>
+            <figure><img src="./SRC/pic/DES.jpg" alt="点击Read more查看详情">
+                <h1>DES</h1>
+			<h3>an older 56-bit symmetric cipher</h3>
+			<p>It was replaced by AES but influenced modern encryption. </p>
+                <a href="./ciphermore/DES.html" class="read-more">Read more</a>
+            </figure>
+             <figure><img src="./SRC/pic/AES.jpg" alt="点击Read more查看详情">
+                <h1>AES</h1>
+			<h3>fast and secure symmetric-key algorithm </h3>
+			<p>It encrypts data in fixed blocks and resists brute-force attacks.</p>
+                <a href="./ciphermore/AES.html" class="read-more">Read more</a>
+            </figure>
+             <figure><img src="./SRC/pic/vegi.jpg" alt="点击Read more查看详情">
+                <h1>The Vigenère cipher </h1>
+			<h3>Historically secure, now a teaching tool </h3>
+			<p>It applies keyword-based shifts, breaking frequency analysis</p>
+                <a href="./ciphermore/vegi.html" class="read-more">Read more</a>
+            </figure>
+			
+		</div>
+	</div>
+
+<canvas id="canvas"></canvas>
+
+
+</body>
+<script>
+ 
+        // 二进制流背景动画
+        let canvas, ctx;
+        let fontSize = 10;
+        let columns, drops;
+        const binaryChars = ['0', '1'];
+        const streamSpeed = 5;
+        const binaryColor = '#00AA00';
+
+        function initCanvas() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            
+            // 初始化drops数组
+            drops = new Array(columns).fill(1);
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            columns = Math.floor(canvas.width / fontSize);
+            drops = new Array(columns).fill(1);
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = binaryColor;
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = binaryChars[Math.floor(Math.random() * binaryChars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i] += streamSpeed / 5;
+            }
+        }
+
+        function animate() {
+            draw();
+            requestAnimationFrame(animate);
+        }
+
+        // 初始化并监听窗口大小变化
+        window.addEventListener('load', () => {
+            initCanvas();
+            animate();
+        });
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+        });
+ 
+
+    // 光标动画样式
+    const cursor = document.createElement('div');
+    cursor.id = 'cursor';
+    document.body.appendChild(cursor);
+
+    let isVisible = false;
+    let animationPaused = false;
+
+    function updateCursorPosition(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        isVisible = true;
+        if (animationPaused) {
+            cursor.style.animationPlayState = 'running';
+            animationPaused = false;
+        }
+    }
+
+    function hideCursor() {
+        isVisible = false;
+        cursor.style.animationPlayState = 'paused';
+        animationPaused = true;
+    }
+
+    window.addEventListener('mousemove', updateCursorPosition);
+    window.addEventListener('mouseout', hideCursor);
+
+    function animateCursor() {
+        cursor.style.display = isVisible ? 'block' : 'none';
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    function animate() {
+        draw();
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+
+    
+</script>
+</html>

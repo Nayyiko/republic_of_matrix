@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DES算法介绍</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: normal;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #000000;
+            position: relative;
+            overflow: auto;
+        }
+
+        /* 背景字母数字装饰 */
+        body::before {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite;
+        }
+ body::after {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: 125px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite reverse;
+        }
+    
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+
+        h1 {
+            font-size: 100px;
+            text-align: center;
+            padding: 0px 20px;
+            color: #ceeac7;
+            font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+            text-shadow: 
+                1px 1px 0 hsl(113, 69%, 66%),
+                2px 2px 0 #5aed6e,
+                3px 3px 0 #5aed6e,
+                4px 4px 0 #7cfb8d,
+                5px 5px 0 #7cfb8d,
+                6px 6px 0 #7cfb8d,
+              
+                0 0 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section {
+            padding: 30px;
+            margin: 30px;
+            border-radius: 10px;
+            background-color: #014520;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        
+            color: #ceeac7;
+        }
+
+        p {
+            text-indent: 2em;
+            margin-bottom: 15px;
+            color: #e0c993;
+        }
+
+        ul,
+        ol {
+            margin-left: 20px;
+            color: #e0c993;
+        }
+
+        .separator {
+            border-left: 2px solid #000;
+            height: 100%;
+            margin: 0 30px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-section {
+            width: 50%;
+        }
+
+        .right-section {
+            width: 50%;
+        }
+
+        .principle img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-section {
+            clear: both;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+           .main-content {
+                flex-direction: column;
+            }
+
+           .left-section,
+           .right-section {
+                width: 100%;
+            }
+
+           .separator {
+                border-left: none;
+                border-top: 2px solid #000;
+                height: auto;
+                margin: 30px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <body>
+        <a href="../carousel.html" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #d6e68e;
+        text-decoration: none;
+        border-radius: 8px;
+        z-index: 1000;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+    ">BACK</a>
+    <h1>DES</h1>
+    <div class="section origin">
+        <h2>DES起源</h2>
+        <p>在密码学的发展历程中，数据加密标准（DES，Data Encryption Standard）是一座里程碑。作为首个被广泛采用的对称加密算法，DES曾守护了全球通信与数据安全数十年。尽管如今已被更先进的算法取代，但理解DES的原理与影响，仍是探索密码学奥秘的必经之路。1970年代，随着计算机技术的飞速发展，数据加密需求激增。IBM公司受美国国家标准局（NBS，后更名为NIST）委托，开发一种安全且高效的加密算法。1975年，IBM提出Lucifer算法，经NBS公开征集意见后，最终演变为DES，并于1977年成为美国联邦标准（FIPS 46）。</p>
+    </div>
+    <div class="main-content">
+        <div class="left-section">
+            <div class="section principle">
+                <h2>核心原理：Feistel结构与密钥扩展</h2>
+                <p>DES是一种对称分组加密算法，将64位明文分组加密为64位密文，使用56位密钥（实际输入64位，含8位校验位）。其核心机制包括：</p>
+                <p>1.初始置换（IP）：</p>
+                <p>重新排列明文比特顺序，增强扩散性。</p>
+                <p>2.16轮Feistel结构：</p>
+                <ul>
+                    <li>分组：将数据分为左右两半（L0, R0）。</li>
+                    <li>轮函数（F函数）：
+                        <ul>
+                            <li>扩展置换（E - box）：将32位R扩展为48位。</li>
+                            <li>密钥混合：与48位轮密钥按位异或。</li>
+                            <li>S - 盒替代：通过8个S - 盒将48位压缩为32位。</li>
+                            <li>P置换：打乱S - 盒输出顺序。</li>
+                        </ul>
+                    </li>
+                    <li>迭代：L(i + 1) = R(i)，R(i + 1) = L(i) ⊕ F(R(i), K(i))。</li>
+                </ul>
+                <p>3.最终置换（IP⁻¹）：</p>
+                <p>逆初始置换，输出密文。</p>
+                <p>密钥扩展：</p>
+                <p>从56位主密钥生成16个48位轮密钥，通过循环移位与压缩置换实现。</p>
+                <p>加解密过程：</p>
+                <ul>
+                    <li>加密：</li>
+                    <p>明文 → 初始置换 → 16轮Feistel加密 → 最终置换 → 密文。</p>
+                    <li>解密：</li>
+                    <p>密文 → 初始置换 → 16轮Feistel解密（轮密钥顺序相反） → 最终置换 → 明文。</p>
+                </ul>
+                <p> </p>
+                <img src="../SRC/pic/DES.jpg" alt="DES加密">
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="right-section">
+            <div class="section limitation">
+                <h2>DES优点与缺点</h2>
+                <p>优势：</p>
+                <ul>
+                    <li>高效性：硬件实现快速，适合实时加密。</li>
+                    <li>标准化：全球通用，兼容性强。</li>
+                    <li>对称性：加密与解密使用相同算法，简化系统设计。</li>
+                </ul>
+                <p>局限：</p>
+                <ul>
+                    <li>密钥长度过短：56位密钥易受暴力破解，现代计算机可在数小时内破解。</li>
+                    <li>分组长度限制：64位分组难以适应大数据加密需求。</li>
+                </ul>
+            </div>
+            <div class="section value">
+                <h2>文化与历史影响</h2>
+                <p>1.密码学复兴：</p>
+                <p>DES的公开标准激发了全球密码学研究，推动了非对称加密（如RSA）的诞生。</p>
+                <p>2.商业应用：</p>
+                <p>广泛应用于金融交易（如POS机）、电子邮件（如PGP早期版本）、VPN等。</p>
+                <p>3.硬件加速：</p>
+                <p>DES芯片成为早期加密硬件的代表，如ATM机中的加密模块。</p>
+            </div>
+        </div>
+    </div>
+    <div class="section final-section">
+        <p>尽管DES已被更安全的算法（如AES）取代，但其历史地位不可撼动，DES验证了分组加密与Feistel结构的可行性，为后续算法设计提供模板。探索DES，不仅是回顾一段技术史，更是理解密码学演进规律的钥匙。</p>
+    </div>
+</body>
+
+</html>    

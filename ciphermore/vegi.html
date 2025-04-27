@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>维吉尼亚密码介绍</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: normal;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #000000;
+            position: relative;
+            overflow: auto;
+        }
+
+        /* 背景字母数字装饰 */
+        body::before {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite;
+        }
+ body::after {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: 125px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite reverse;
+        }
+    
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+
+        h1 {
+            font-size: 100px;
+            text-align: center;
+            padding: 0px 20px;
+            color: #ceeac7;
+            font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+            text-shadow: 
+                1px 1px 0 hsl(113, 69%, 66%),
+                2px 2px 0 #5aed6e,
+                3px 3px 0 #5aed6e,
+                4px 4px 0 #7cfb8d,
+                5px 5px 0 #7cfb8d,
+                6px 6px 0 #7cfb8d,
+              
+                0 0 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section {
+            padding: 30px;
+            margin: 30px;
+            border-radius: 10px;
+            background-color: #014520;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        
+            color: #ceeac7;
+        }
+
+        p {
+            text-indent: 2em;
+            margin-bottom: 15px;
+            color: #e0c993;
+        }
+
+        ul,
+        ol {
+            margin-left: 20px;
+            color: #e0c993;
+        }
+
+        .separator {
+            border-left: 2px solid #000;
+            height: 100%;
+            margin: 0 30px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-section {
+            width: 50%;
+        }
+
+        .right-section {
+            width: 50%;
+        }
+
+        .principle img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-section {
+            clear: both;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+           .main-content {
+                flex-direction: column;
+            }
+
+           .left-section,
+           .right-section {
+                width: 100%;
+            }
+
+           .separator {
+                border-left: none;
+                border-top: 2px solid #000;
+                height: auto;
+                margin: 30px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <body>
+        <a href="../carousel.html" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #d6e68e;
+        text-decoration: none;
+        border-radius: 8px;
+        z-index: 1000;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+    ">BACK</a>
+    <h1>维吉尼亚密码</h1>
+    <div class="section origin">
+        <h2>维吉尼亚密码的起源与核心原理</h2>
+        <p>维吉尼亚密码作为多表替代加密法的巅峰之作，它不仅破解了凯撒密码的脆弱性，更为后世密码学的发展奠定了坚实基础。维吉尼亚密码诞生于16世纪的法国，由外交官布莱斯·德·维吉尼亚提出。其核心思想是通过动态密钥控制加密位移量，从而避免单一字母位移的规律性。</p>
+    </div>
+    <div class="main-content">
+        <div class="left-section">
+            <div class="section principle">
+                <h2>加解密原理</h2>
+                <p>1.密钥扩展：将密钥（如KEY）重复填充至与明文等长，形成密钥流。</p>
+                <p>2.多表替代：使用维吉尼亚方阵（Vigenère Tableau），每一行对应一个凯撒密码的位移表。</p>
+                <p>3.逐字母加密：明文字母与密钥字母的行、列交叉点即为密文字母。</p>
+                <p>示例：</p>
+                <ul>
+                    <li>明文：HELLO</li>
+                    <li>密钥：KEY（扩展为KEYKE）</li>
+                    <li>加密过程：
+                        <ul>
+                            <li>H（明文） + K（密钥行） → R（密文）</li>
+                            <li>E（明文） + E（密钥行） → I（密文）</li>
+                            <li>依此类推，最终密文为：RIJVS</li>
+                        </ul>
+                    </li>
+                </ul>
+                <img src="../SRC/pic/vegi.jpg" alt="维吉尼亚密码">
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="right-section">
+            <div class="section limitation">
+                <h2>维吉尼亚密码的加密强度与破解挑战</h2>
+                <p>相较于凯撒密码，维吉尼亚密码的密钥空间呈指数级增长，使其在古典密码中近乎“不可破译”：</p>
+                <ul>
+                    <li>密钥长度决定安全性：若密钥长度为n，则需尝试26^n种组合（假设字母表为26个字母）。</li>
+                    <li>抵抗频率分析：由于不同字母在不同位置使用不同位移量，密文字母频率分布趋于均匀，难以通过统计分析破解。</li>
+                </ul>
+                <p>然而，完美并非无懈可击：</p>
+                <ul>
+                    <li>密钥重复性：若密钥较短且明文较长，重复的密钥模式可能暴露规律。</li>
+                    <li>Kasiski检验：通过分析密文中重复子串的间距，可推测密钥长度。</li>
+                    <li>Babbage-Kasiski攻击：结合频率分析，进一步缩小密钥范围。</li>
+                </ul>
+            </div>
+            <div class="section value">
+                <h2>维吉尼亚密码的文化与历史影响</h2>
+                <p>1.军事与外交的秘密武器：</p>
+                <p>在19世纪，维吉尼亚密码被欧洲各国广泛用于军事通信，成为国家机密的重要守护者。</p>
+                <p>2.密码学教育的里程碑：</p>
+                <p>它被收录入众多密码学教材，成为理解多表替代加密的经典案例。</p>
+            </div>
+        </div>
+    </div>
+    <div class="section final-section">
+        <p>维吉尼亚密码的诞生，标志着人类从简单替代迈向复杂加密的重要一步。尽管在计算机时代，它已被更先进的算法取代，但其通过密钥扩展实现安全性的思想，依然闪耀着智慧的光芒。探索维吉尼亚密码，不仅是解码一段历史，更是领悟密码学本质的钥匙——真正的安全，源于对规律的敬畏与对创新的追求。</p>
+    </div>
+</body>
+
+</html>

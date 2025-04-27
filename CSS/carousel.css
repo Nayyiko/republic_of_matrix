@@ -1,0 +1,179 @@
+#canvas {
+  position: absolute;
+z-index: -1;  /* Canvas在底层 */
+top: 0;
+left: 0;
+}
+#cursor {
+  position: absolute;
+  width: 2px;
+  height: 24px;
+  background: #00AA00;
+  pointer-events: none;
+  opacity: 0;
+  animation: blink 0.5s infinite;
+  z-index: 50;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@import url(https://fonts.googleapis.com/css?family=Anaheim);
+
+*{
+margin: 0;
+padding: 0;
+outline: none;
+border: none;
+box-sizing: border-box;
+}
+*:before,
+*:after{
+box-sizing: border-box;
+}
+html,
+body{
+min-height: 100%;
+}
+body{
+background-image: radial-gradient(mintcream 0%, lightgray 100%);
+}
+h1{
+display: table;
+margin: 5% auto 0;
+text-transform: uppercase;
+font-family: 'Anaheim', sans-serif;
+font-size: 4em;
+font-weight: 400;
+text-shadow: 0 1px white, 0 2px black;
+}
+.container{
+margin: 8% auto;
+width: 400px;  /* 增大容器宽度 */
+height: 220px;  /* 增大容器高度 */
+position: relative;
+perspective: 1000px;
+z-index: 10;
+}
+#carousel{
+width: 100%;
+height: 100%;
+position: absolute;
+transform-style: preserve-3d;
+animation: rotation 20s infinite linear;
+}
+#carousel:hover{
+animation-play-state: paused;
+}
+#carousel figure{
+display: block;
+position: absolute;
+width: 450px;
+height: 220px;
+left: 10px;
+top: 10px;
+background: #050505;
+overflow: hidden;
+border: solid 5px black;
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+align-items: center;
+padding-bottom: 5px;  /* 减少底部内边距 */
+}
+#carousel figure img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  z-index: -1;
+}
+#carousel figure h1 {
+color: #00ff00;
+
+
+font-weight: bold;
+animation: glow 2s ease-in-out infinite alternate;
+font-size: 25px;  /* 从14px缩小到12px */
+padding: 1px;  /* 减少内边距 */
+margin: 0;
+text-align: center;
+width: 100%;
+}
+@keyframes glow {
+  from {
+      text-shadow: 
+          0 0 5px #00ff00,
+          0 0 10px hsla(99, 100%, 50%, 0.851),
+          0 0 20px hsla(120, 100%, 50%, 0.651);
+  }
+  to {
+      text-shadow: 
+          0 0 10px rgba(0, 255, 0, 0.645),
+          0 0 20px hsla(120, 100%, 50%, 0.5),
+          0 0 30px hsla(120, 100%, 50%, 0.168);
+  }
+}
+#carousel figure h3 {
+color: #b8dea1;
+font-size: 8px;  /* 从12px缩小到10px */
+padding: 1px;  /* 减少内边距 */
+margin: 0;
+text-align: center;
+width: 100%;
+text-shadow: 0 0 5px;
+font-weight: normal; 
+}
+
+#carousel figure p {
+color: #f8d55d;
+font-size: 8px;  /* 从10px缩小到8px */
+padding: 1px;  /* 减少内边距 */
+margin: 0;
+text-align: center;
+width: 100%;
+text-shadow: 0 0 3px 
+}
+#carousel figure a {
+color: #ff9041;
+font-size: 8px;  /* 从10px缩小到8px */
+padding: 1px;  /* 减少内边距 */
+margin: 0;
+text-align: center;
+width: 100%;
+text-shadow: 0 0 3px 
+}
+/* 调整6个元素的旋转角度和Z轴位移 */
+#carousel figure:nth-child(1){transform: rotateY(0deg) translateZ(450px);}
+#carousel figure:nth-child(2){transform: rotateY(60deg) translateZ(450px);}
+#carousel figure:nth-child(3){transform: rotateY(120deg) translateZ(450px);}
+#carousel figure:nth-child(4){transform: rotateY(180deg) translateZ(450px);}
+#carousel figure:nth-child(5){transform: rotateY(240deg) translateZ(450px);}
+#carousel figure:nth-child(6){transform: rotateY(300deg) translateZ(450px);}
+
+/* 隐藏多余的figure元素 */
+#carousel figure:nth-child(7),
+#carousel figure:nth-child(8),
+#carousel figure:nth-child(9) {
+display: none;
+}
+img{
+-webkit-filter: grayscale(1);
+cursor: pointer;
+transition: all .5s ease;
+}
+img:hover{
+-webkit-filter: grayscale(0);
+transform: scale(1.2,1.2);
+}
+
+@keyframes rotation{
+from{
+transform: rotateY(0deg);
+}
+to{
+transform: rotateY(360deg);
+}
+}

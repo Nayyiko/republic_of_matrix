@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElGamal算法介绍</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: normal;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #000000;
+            position: relative;
+            overflow: auto;
+        }
+
+        /* 背景字母数字装饰 */
+        body::before {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite;
+        }
+ body::after {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: 125px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite reverse;
+        }
+    
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+
+        h1 {
+            font-size: 100px;
+            text-align: center;
+            padding: 0px 20px;
+            color: #ceeac7;
+            font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+            text-shadow: 
+                1px 1px 0 hsl(113, 69%, 66%),
+                2px 2px 0 #5aed6e,
+                3px 3px 0 #5aed6e,
+                4px 4px 0 #7cfb8d,
+                5px 5px 0 #7cfb8d,
+                6px 6px 0 #7cfb8d,
+              
+                0 0 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section {
+            padding: 30px;
+            margin: 30px;
+            border-radius: 10px;
+            background-color: #014520;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        
+            color: #ceeac7;
+        }
+
+        p {
+            text-indent: 2em;
+            margin-bottom: 15px;
+            color: #e0c993;
+        }
+
+        ul,
+        ol {
+            margin-left: 20px;
+            color: #e0c993;
+        }
+
+        .separator {
+            border-left: 2px solid #000;
+            height: 100%;
+            margin: 0 30px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-section {
+            width: 50%;
+        }
+
+        .right-section {
+            width: 50%;
+        }
+
+        .principle img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-section {
+            clear: both;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+           .main-content {
+                flex-direction: column;
+            }
+
+           .left-section,
+           .right-section {
+                width: 100%;
+            }
+
+           .separator {
+                border-left: none;
+                border-top: 2px solid #000;
+                height: auto;
+                margin: 30px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <body>
+        <a href="../carousel.html" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #d6e68e;
+        text-decoration: none;
+        border-radius: 8px;
+        z-index: 1000;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+    ">BACK</a>
+    <h1>ElGamal</h1>
+    <div class="section origin">
+        <h2>Elgamal起源：从密钥交换到加密革命</h2>
+        <p>在互联网通信中，如何确保信息仅能被预期的接收者读取？ElGamal加密算法以其数学之美与实用性，成为公钥密码学的重要基石。作为Diffie-Hellman密钥交换的延伸，ElGamal不仅实现了安全加密，更开创了数字签名的新纪元。1984年，塔希尔·盖尔莫尔（Taher ElGamal）在Netscape公司工作期间，基于Diffie-Hellman密钥交换协议提出ElGamal加密算法。这一创新解决了公钥加密的核心难题：在不共享密钥的前提下实现安全通信。</p>
+    </div>
+    <div class="main-content">
+        <div class="left-section">
+            <div class="section principle">
+                <h2>核心原理及加解密</h2>
+                <p>ElGamal的安全性基于有限域上的离散对数问题：</p>
+                <p>给定大素数 p、生成元 g 和 gˣ mod p，求解 x 极其困难。</p>
+                <p>ElGamal 加密算法的数学原理及加解密过程</p>
+                <p>算法参数</p>
+                <p>公钥：(p, g, y)，其中 y ≡ gˣ mod p</p>
+                <p>私钥：x（随机选取的整数，1 < x < p-1）</p>
+                <p>1. 密钥生成</p>
+                <p>选择一个大素数p和它的一个生成元 g,随机选取私钥x∈ {2, 3, ..., p-2},计算公钥y ≡ gˣ mod p</p>
+                <p>2. 加密过程</p>
+                <p>发送方使用接收方的公钥 (p, g, y) 加密消息 m：随机选择临时密钥k（1 < k < p-1）,计算 c₁ ≡ gᵏ mod p,计算共享密钥 s ≡ yᵏ mod p,加密消息：c₂ ≡ m·s mod p,发送密文 (c₁, c₂)</p>
+                <p>3. 解密过程</p>
+                <p>接收方使用私钥 x 解密密文 (c₁, c₂)：计算共享密钥 s' ≡ c₁ˣ mod p,计算 s' 的模逆元 s'⁻¹ mod p（满足 s'·s'⁻¹ ≡ 1 mod p）,解密消息：m ≡ c₂·s'⁻¹ mod p</p>
+                <p>解密过程的正确性基于以下数学推导：</p>
+                <p>加密时：s ≡ yᵏ ≡ (gˣ)ᵏ ≡ gˣᵏ mod p</p>
+                <p>解密时：s' ≡ c₁ˣ ≡ (gᵏ)ˣ ≡ gˣᵏ ≡ s mod p</p>
+                <p>因此：c₂·s'⁻¹ ≡ (m·s)·s⁻¹ ≡ m mod p</p>
+                <img src="../SRC/pic/el.jpg" alt="Elgamal加密">
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="right-section">
+            <div class="section limitation">
+                <h2>优点与缺点</h2>
+                <p>优势：</p>
+                <ul>
+                    <li>安全性：依赖离散对数难题，抗量子计算攻击（需结合后量子算法）。</li>
+                    <li>灵活性：支持加密与签名，可扩展为多方通信协议。</li>
+                    <li>数学之美：简洁优雅，适合教学与研究。</li>
+                </ul>
+                <p>局限：</p>
+                <ul>
+                    <li>密文膨胀：密文长度是明文的两倍，带宽消耗大。</li>
+                    <li>性能瓶颈：模幂运算耗时，不适用于资源受限设备。</li>
+                    <li>可塑性攻击：若随机数 k 重复，可能导致私钥泄露。</li>
+                </ul>
+            </div>
+            <div class="section value">
+                <h2>文化与历史影响：密码学的里程碑</h2>
+                <p>1.标准与应用：</p>
+                <ul>
+                    <li>PGP：ElGamal加密与签名是PGP协议的核心组件。</li>
+                    <li>区块链：以太坊等平台使用ElGamal变体实现数字签名。</li>
+                    <li>VPN：OpenVPN等协议支持ElGamal密钥交换。</li>
+                </ul>
+                <p>2.学术突破：</p>
+                <ul>
+                    <li>零知识证明：ElGamal的数学结构启发零知识证明协议的发展。</li>
+                    <li>同态加密：其同态属性为现代同态加密研究奠定基础。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="section final-section">
+        <p>尽管ElGamal已不再是主流加密算法，但其影响深远，它证明了公钥加密的可行性，推动了RSA、ECC等算法的诞生，强调了随机数生成与密钥管理的重要性。探索ElGamal，不仅是回顾一段技术史，更是理解密码学演进规律的钥匙。</p>
+    </div>
+</body>
+
+</html>

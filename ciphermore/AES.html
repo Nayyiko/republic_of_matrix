@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES算法介绍</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: normal;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #000000;
+            position: relative;
+            overflow: auto;
+        }
+
+        /* 背景字母数字装饰 */
+        body::before {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite;
+        }
+ body::after {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: 125px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite reverse;
+        }
+    
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+
+        h1 {
+            font-size: 100px;
+            text-align: center;
+            padding: 0px 20px;
+            color: #ceeac7;
+            font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+            text-shadow: 
+                1px 1px 0 hsl(113, 69%, 66%),
+                2px 2px 0 #5aed6e,
+                3px 3px 0 #5aed6e,
+                4px 4px 0 #7cfb8d,
+                5px 5px 0 #7cfb8d,
+                6px 6px 0 #7cfb8d,
+              
+                0 0 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section {
+            padding: 30px;
+            margin: 30px;
+            border-radius: 10px;
+            background-color: #014520;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        
+            color: #ceeac7;
+        }
+
+        p {
+            text-indent: 2em;
+            margin-bottom: 15px;
+            color: #e0c993;
+        }
+
+        ul,
+        ol {
+            margin-left: 20px;
+            color: #e0c993;
+        }
+
+        .separator {
+            border-left: 2px solid #000;
+            height: 100%;
+            margin: 0 30px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-section {
+            width: 50%;
+        }
+
+        .right-section {
+            width: 50%;
+        }
+
+        .principle img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-section {
+            clear: both;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+           .main-content {
+                flex-direction: column;
+            }
+
+           .left-section,
+           .right-section {
+                width: 100%;
+            }
+
+           .separator {
+                border-left: none;
+                border-top: 2px solid #000;
+                height: auto;
+                margin: 30px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="../carousel.html" style="
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #94f959;
+    text-decoration: none;
+    border-radius: 8px;
+    z-index: 1000;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+">BACK</a>
+    <h1>AES</h1>
+    <div class="section origin">
+        <h2>AES起源</h2>
+        <p>AES的诞生源于对数据加密标准（DES）的升级需求。20世纪末，DES因密钥长度过短（56位）逐渐暴露出安全漏洞，难以抵御暴力破解攻击。1997年，美国国家标准与技术研究院（NIST）发起AES竞赛，旨在寻找更安全、更高效的加密算法。经过全球密码学家的激烈角逐，比利时密码学家文森特·莱曼和琼·达门设计的Rijndael算法脱颖而出，于2001年正式成为AES标准。</p>
+    </div>
+    <div class="main-content">
+        <div class="left-section">
+            <div class="section principle">
+                <h2>加解密核心原理：分组加密与密钥扩展</h2>
+                <p>AES是一种对称分组加密算法，将明文分割为固定长度的数据块（128位），并使用相同密钥进行加密和解密。其核心机制包括：</p>
+                <p>1.密钥扩展：</p>
+                <p>根据输入密钥（128/192/256位），生成多轮轮密钥（Round Keys），每轮加密使用不同的密钥。</p>
+                <p>2.轮函数（Round Function）：</p>
+                <p>每轮加密包含四个步骤：</p>
+                <ul>
+                    <li>字节替代（SubBytes）：通过S - 盒（Substitution Box）对字节进行非线性变换。</li>
+                    <li>行移位（ShiftRows）：对状态矩阵的行进行循环移位，实现数据扩散。</li>
+                    <li>列混淆（MixColumns）：通过矩阵乘法混合列数据，增强混淆效果。</li>
+                    <li>轮密钥加（AddRoundKey）：将轮密钥与状态矩阵按位异或。</li>
+                </ul>
+                <p>3.轮数：</p>
+                <p>根据密钥长度，AES执行10轮（128位）、12轮（192位）或14轮（256位）加密。</p>
+                <p>加解密过程：对称与高效的典范</p>
+                <ul>
+                    <li>加密：</li>
+                    <p>明文 → 分组 → 初始轮密钥加 → 多轮轮函数 → 最终轮（省略列混淆） → 密文。</p>
+                    <li>解密：</li>
+                    <p>密文 → 分组 → 逆初始轮密钥加 → 多轮逆轮函数 → 最终轮（恢复列混淆） → 明文。</p>
+                </ul>
+                <p></p>
+                <img src="../SRC/pic/AES.jpg" alt="AES加密">
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="right-section">
+            <div class="section limitation">
+                <h2>优点与缺点</h2>
+                <p>优势：</p>
+                <ul>
+                    <li>安全性高：长密钥与多轮加密有效抵御暴力破解与差分攻击。</li>
+                    <li>效率卓越：硬件加速与软件优化使其在各种设备上快速运行。</li>
+                    <li>灵活性强：支持128/192/256位密钥长度，适应不同安全需求。</li>
+                </ul>
+                <p>局限：</p>
+                <ul>
+                    <li>密钥管理复杂：对称加密需安全分发密钥，可能增加系统风险。</li>
+                    <li>硬件依赖：部分优化实现依赖特定硬件指令集，兼容性受限。</li>
+                </ul>
+            </div>
+            <div class="section value">
+                <h2>文化与历史影响：从军事到民用的普及</h2>
+                <p>1.政府与军事：</p>
+                <p>AES成为美国政府保护敏感信息的标准，广泛应用于军事通信与机密文件加密。</p>
+                <p>2.金融与支付：</p>
+                <p>银行、信用卡公司采用AES保护交易数据，确保资金安全。</p>
+                <p>3.云计算与物联网：</p>
+                <p>云服务提供商与智能设备制造商依赖AES加密用户数据，防止隐私泄露。</p>
+                <p>4.开源与标准化：</p>
+                <p>AES的开源实现（如OpenSSL）与标准化（ISO/IEC 18033 - 3）推动了全球加密技术的普及。</p>
+                <p>5.文化符号：</p>
+                <p>AES在电影《黑客帝国》中被提及，成为数字安全文化的象征。</p>
+            </div>
+        </div>
+    </div>
+    <div class="section final-section">
+        <p>从DES的终结到AES的崛起，密码学的发展始终与人类对安全的追求紧密相连。AES以其安全性、效率与灵活性，成为现代加密技术的标杆。尽管量子计算等新兴技术对传统加密算法构成挑战，但AES的迭代升级（如AES - 256）与后量子密码学的结合，将继续守护数字世界的未来。</p>
+    </div>
+</body>
+
+</html>    

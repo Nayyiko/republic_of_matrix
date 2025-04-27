@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>矩阵虚拟国宣言</title>
+    <style>
+        .c > div {
+            padding: 1em;
+        }
+        @media screen and (min-width: 31.42em) {
+            .c2, .c3 {
+                float: left;
+                width: 50%;
+            }
+        }
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .language-btn {
+            padding: 5px 10px;
+            background: #269c38;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .chinese { display: block; }
+        .english { display: none; }
+        body.lang-en .chinese { display: none; }
+        body.lang-en .english { display: block; }
+    </style>
+    <style>
+        #pattern {
+            border: 8px solid #c0c0c0; /* 改为银灰色 */
+            border-radius: 12px;
+            background: #0a0a0a;
+            box-shadow: 
+                0 0 0 2px #555,
+                0 0 25px rgba(192, 192, 192, 0.8), /* 增强金属反光 */
+                inset 0 0 20px rgba(255, 255, 255, 0.6), /* 内发光增强 */
+                inset 0 0 40px rgba(255, 255, 255, 0.3);
+            padding: 10px;
+            position: relative;
+            overflow-y: auto; /* 保持滚动功能 */
+            height: 80vh;
+            width: 85%;
+            max-width: 1000px;
+            margin: 15px auto;
+            /* 隐藏滚动条 */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+        
+        /* Chrome/Safari/Opera 隐藏滚动条 */
+        #pattern::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            background: #050505;
+            color: #00ff00;
+            font-family: 'Poppins', sans-serif;
+            text-shadow: 0 0 5px #269e26;
+            padding: 20px;
+            overflow: hidden; /* 禁止整个页面滚动 */
+        }
+        
+        #pattern::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30%; /* 上半部分高度 */
+            background: linear-gradient(
+                to bottom, 
+                rgba(0, 255, 0, 0.1), 
+                transparent
+            ); /* 上半部分半透明渐变 */
+            pointer-events: none;
+        }
+        
+        #pattern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                rgba(0, 255, 0, 0.1) 1px, 
+                transparent 1px
+            );
+            background-size: 100% 2px;
+            pointer-events: none;
+            animation: scanline 8s linear infinite;
+        }
+        
+        @keyframes scanline {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(100%); }
+        }
+        #canvas {
+            position: absolute;
+        z-index: -1;  /* Canvas在底层 */
+        top: 0;
+        left: 0;
+        }
+        .c > div {
+            padding: 1em;
+            background: rgba(5, 30, 5, 0.7);
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        h2 {
+            color:#3eede7;
+            text-align: center; 
+            /* 移除text-shadow和animation属性 */
+        }
+        h3 {
+            color: #81d8cf;
+            /* 移除text-shadow和animation属性 */
+        }
+         p {
+            color: #f8f5d6;
+         
+        }
+        
+        /* 移除glow关键帧动画 */
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00ff00; }
+            to { text-shadow: 0 0 15px #00ff00, 0 0 20px #00ff00; }
+        }
+        
+        .language-btn {
+            background: transparent;
+            border: 2px solid hwb(120 0% 0% / 0.747);
+            color: hsla(120, 100%, 50%, 0.837);
+            /* 移除text-shadow属性 */
+            transition: all 0.3s;
+        }
+        
+        .language-btn:hover {
+            background: rgba(0, 255, 0, 0.2);
+        }
+        
+        /* 保持原有的媒体查询和布局样式 */
+        @media screen and (min-width: 31.42em) {
+            .c2, .c3 {
+                float: left;
+                width: 50%;
+            }
+        }
+    </style>
+    <audio src="./SRC/music/index_bgm.MP3" loop autoplay></audio>
+</head>
+<body>
+    <body>
+        <a href="./text.html" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #00ff00;
+        text-decoration: none;
+        border-radius: 8px;
+        z-index: 1000;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+    ">BACK</a>
+    <canvas id="canvas"></canvas>
+    <div class="language-switcher">
+        <button class="language-btn" onclick="toggleLanguage()">EN/中文</button>
+    </div>
+
+    <div id="pattern" class="pattern">
+        <div class="c">
+            <div class="main">
+                <h2 class="chinese">矩阵虚拟国宣言</h2>
+                <h2 class="english">DECLARATION OF MATRIX REPUBLIC</h2>
+                
+                <div class="chinese">
+                    <h3>一、核心宗旨</h3>
+                    <p>我们心怀对密码学的无限热忱与崇高敬意，致力于搭建一座自由、开放、共享且专业卓越的密码学知识圣殿。这里，是密码学智慧的璀璨星河，是探寻数字世界奥秘的神秘殿堂。我们以构建密码学学术交流的至高平台为神圣使命，以汇聚全球密码学精英为庄严责任，以引领密码学领域的前沿探索为宏伟愿景。让每一位踏入这片知识圣殿的成员，都能深切感受密码学的深邃魅力与磅礴力量，共同为守护数字世界的安宁与秩序、推动人类文明的进步与发展贡献力量。</p>
+                    
+                    <h3>二、成员责任</h3>
+                    <p>每一位成员都应怀揣对知识的炽热渴望，积极主动地投身于密码学知识的浩瀚海洋。不仅要深入钻研经典理论，更要勇于探索未知领域，不断磨砺自己的专业素养与技能水平，使自己成为密码学领域的璀璨星辰，照亮知识的夜空。同时严格遵守国家相关法律法规，如同守护自己的精神家园一般守护网页的纯净与安全。坚决不在网页上发布任何违法、违规的信息或内容，让每一位成员都能在一个健康、和谐、高雅的环境中交流学习。坚决杜绝抄袭、盗用他人作品或成果的行为，让创新与创造在知识圣殿中自由绽放，让学术的花园繁花似锦。积极参与网页的管理与维护工作，如同共同建设一个繁荣的文明国度。以主人翁的姿态，为网页的健康发展出谋划策，共同营造一个和谐、有序、积极向上的交流环境。不发布任何攻击性、侮辱性或恶意的信息，尊重每位成员的意见和观点，如同尊重不同文明之间的文化差异。</p>
+                    
+                    <h3>三、成员权益</h3>
+                    <p>成员有权获取网页上发布的所有密码学相关知识与资源，如同拥有了一座取之不尽、用之不竭knowledge宝库。在这里，你可以自由地汲取知识的养分，不断充实自己的大脑，提升自己的能力，攀登密码学的高峰。成员也有权参与网页的管理和决策过程，如同拥有了一个展现自己才华与智慧的舞台。在这里，你可以为网页的发展提出宝贵的意见和建议，参与网页的规划与建设，让自己的声音被听见、被重视，共同塑造网页的未来。</p>
+                    
+                    <h3>四、共同愿景</h3>
+                    <p>我们期望每一位成员都能成为密码学领域的卓越探索者与积极推动者，如同勇敢的开拓者开拓未知的领域。在这里，我们携手并进，共同推动密码学领域的前沿探索与创新技术，让密码学成为推动人类文明进步的强大动力。我们共同为构建一个安全、可信、繁荣的网络环境贡献自己的力量，让密码学成为守护数字世界和平与安宁的坚固盾牌，成为连接人类智慧与未来的桥梁。</p>
+                    
+                    <p>本守则是我们共同构建的理想中的密码学知识圣殿的基石，希望每位成员都能严格遵守守则，积极履行责任，以饱满的热情、坚定的信念、不懈的努力，共同为网页的发展与壮大贡献自己的力量，让我们的密码学科普知识圣殿在数字世界的天空中绽放出更加璀璨的光芒，成为人类文明史上一颗耀眼的明星！</p>
+                </div>
+                
+                <div class="english">
+                    <h3>1. Core Purpose</h3>
+                    <p>With boundless passion and profound respect for cryptography, we are committed to building a free, open, shared, and professionally excellent sanctuary of cryptographic knowledge. Here lies the brilliant galaxy of cryptographic wisdom, a mysterious hall for exploring the secrets of the digital world. Our sacred mission is to construct the supreme platform for academic exchange in cryptography, our solemn responsibility is to gather global cryptographic elites, and our grand vision is to lead the frontier exploration in the field of cryptography. Let every member who steps into this knowledge sanctuary deeply feel the profound charm and tremendous power of cryptography, and jointly contribute to safeguarding the peace and order of the digital world, as well as promoting the progress and development of human civilization.</p>
+                    
+                    <h3>2. Member Responsibilities</h3>
+                    <p>Every member should embrace a burning desire for knowledge and actively immerse themselves in the vast ocean of cryptographic knowledge. Not only should they delve deeply into classical theories, but also courageously explore unknown territories, continuously honing their professional competence and skill levels to become shining stars in the field of cryptography, illuminating the night sky of knowledge. At the same time, they must strictly comply with relevant national laws and regulations, guarding the purity and security of the webpage as if protecting their own spiritual home. Resolutely refrain from posting any illegal or inappropriate information or content on the webpage, ensuring that every member can communicate and learn in a healthy, harmonious, and elegant environment. Firmly reject plagiarism and unauthorized use of others' works or achievements, allowing innovation and creativity to bloom freely in this knowledge sanctuary, making the academic garden flourish with a hundred flowers. Actively participate in the management and maintenance of the webpage, as if jointly building a prosperous civilized nation. With a sense of ownership, offer suggestions for the healthy development of the webpage, and jointly create a harmonious, orderly, and positive communication environment. Do not post any offensive, insulting, or malicious information, and respect the opinions and viewpoints of each member, just as respecting cultural differences between civilizations.</p>
+                    
+                    <h3>3. Member Rights</h3>
+                    <p>Members have the right to access all cryptography-related knowledge and resources published on the webpage, as if possessing an inexhaustible treasure trove of knowledge. Here, you can freely absorb the nutrients of knowledge, continuously enrich your mind, enhance your abilities, and climb the peaks of cryptography. Members also have the right to participate in the management and decision-making processes of the webpage, as if having a stage to showcase their talents and wisdom. Here, you can provide valuable opinions and suggestions for the development of the webpage, participate in its planning and construction, making your voice heard and valued, and jointly shaping the future of the webpage.</p>
+                    
+                    <h3>4. Shared Vision</h3>
+                    <p>We expect every member to become an outstanding explorer and active promoter in the field of cryptography, like brave pioneers opening up unknown territories. Here, we advance hand in hand, jointly promoting frontier exploration and technological innovation in cryptography, making it a powerful driving force for the progress of human civilization. Together, we contribute our strength to building a secure, trustworthy, and prosperous network environment, making cryptography a solid shield guarding the peace and tranquility of the digital world, and a bridge connecting human wisdom and the future.</p>
+                    
+                    <p>This code of conduct is the cornerstone of our ideal cryptography knowledge sanctuary. We hope every member can strictly adhere to the code, actively fulfill their responsibilities, and with full enthusiasm, firm belief, and unremitting efforts, jointly contribute to the development and growth of the webpage. Let our cryptography knowledge sanctuary shine even more brilliantly in the sky of the digital world, becoming a dazzling star in the history of human civilization!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleLanguage() {
+            document.body.classList.toggle('lang-en');
+        }
+    </script>
+    <script>
+        // 二进制流背景动画
+        let canvas, ctx;
+        let fontSize = 10;
+        let columns, drops;
+        const binaryChars = ['0', '1'];
+        const streamSpeed = 5;
+        const binaryColor = '#00AA00';
+
+        function initCanvas() {
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            
+            // 初始化drops数组
+            drops = new Array(columns).fill(1);
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            columns = Math.floor(canvas.width / fontSize);
+            drops = new Array(columns).fill(1);
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = binaryColor;
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = binaryChars[Math.floor(Math.random() * binaryChars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i] += streamSpeed / 5;
+            }
+        }
+
+        function animate() {
+            draw();
+            requestAnimationFrame(animate);
+        }
+
+        // 初始化并监听窗口大小变化
+        window.addEventListener('load', () => {
+            initCanvas();
+            animate();
+        });
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>

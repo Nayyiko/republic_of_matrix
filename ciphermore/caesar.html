@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>凯撒密码介绍</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: normal;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #000000;
+            position: relative;
+            overflow: auto;
+        }
+
+        /* 背景字母数字装饰 */
+        body::before {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite;
+        }
+ body::after {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: 125px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite reverse;
+        }
+    
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+
+        h1 {
+            font-size: 100px;
+            text-align: center;
+            padding: 0px 20px;
+            color: #ceeac7;
+            font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+            text-shadow: 
+                1px 1px 0 hsl(113, 69%, 66%),
+                2px 2px 0 #5aed6e,
+                3px 3px 0 #5aed6e,
+                4px 4px 0 #7cfb8d,
+                5px 5px 0 #7cfb8d,
+                6px 6px 0 #7cfb8d,
+              
+                0 0 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section {
+            padding: 30px;
+            margin: 30px;
+            border-radius: 10px;
+            background-color: #014520;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        
+            color: #ceeac7;
+        }
+
+        p {
+            text-indent: 2em;
+            margin-bottom: 15px;
+            color: #e0c993;
+        }
+
+        ul,
+        ol {
+            margin-left: 20px;
+            color: #e0c993;
+        }
+
+        .separator {
+            border-left: 2px solid #000;
+            height: 100%;
+            margin: 0 30px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-section {
+            width: 50%;
+        }
+
+        .right-section {
+            width: 50%;
+        }
+
+        .principle img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-section {
+            clear: both;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+           .main-content {
+                flex-direction: column;
+            }
+
+           .left-section,
+           .right-section {
+                width: 100%;
+            }
+
+           .separator {
+                border-left: none;
+                border-top: 2px solid #000;
+                height: auto;
+                margin: 30px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <body>
+        <a href="../carousel.html" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #d6e68e;
+        text-decoration: none;
+        border-radius: 8px;
+        z-index: 1000;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+    ">BACK</a>
+    <h1>凯撒密码</h1>
+    <div class="section origin">
+        <h2>凯撒密码的起源与原理</h2>
+        <p>凯撒密码开创加密先河，它是早期有明确记载的加密方法之一，为密码学的发展奠定了基础。让人们开始认识到通过对信息进行特定规则的变换可以实现保密通信。凯撒密码以古罗马帝国统治者尤利乌斯·凯撒的名字命名。据传，凯撒在军事通信中广泛使用这一方法，以确保机密信息不被敌方截获。</p>
+    </div>
+    <div class="main-content">
+        <div class="left-section">
+            <div class="section principle">
+                <h2>凯撒密码的原理</h2>
+                <p>将明文中的每个字母，按照字母表顺序向后（或向前）移动固定数量的位次，从而生成密文。例如，若位移量为3，则字母A变为D，B变为E，以此类推；解密时，只需将密文字母反向移动相同位次即可还原明文。</p>
+                <p>假设我们选择位移量 k = 3，对明文 "HELLO WORLD" 进行加密：</p>
+                <ol>
+                    <li>明文：H E L L O W O R L D</li>
+                    <li>加密过程：
+                        <p>H → K，E → H，L → O，O → R，W → Z，依此类推</p>
+                    </li>
+                    <li>密文：KHOOR ZRUOG</li>
+                </ol>
+                <p>解密时，只需将密文字母向前移动3位，即可恢复原始信息。</p>
+                <img src="../SRC/pic/caesar.jpg" alt="凯撒密码原理相关图片">
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="right-section">
+            <div class="section limitation">
+                <h2>凯撒密码的破解与局限</h2>
+                <p>尽管凯撒密码在古代被视为高效加密手段，但其脆弱性在现代密码学中显而易见：</p>
+                <ul>
+                    <li>密钥空间极小：仅25种可能位移（排除k = 0的情况），通过暴力破解（尝试所有位移量）即可轻松解密。</li>
+                    <li>语言特征暴露：加密后的密文仍保留原始语言的字母频率和单词结构，例如英语中常见的字母“E”和“T”在密文中依然可能高频出现。</li>
+                </ul>
+            </div>
+            <div class="section value">
+                <h2>凯撒密码的文化与教育价值</h2>
+                <p>尽管凯撒密码在现代已被更复杂的加密算法取代，但其历史意义与教育价值不可忽视：</p>
+                <ol>
+                    <li>密码学启蒙：作为替代密码的典型代表，凯撒密码为理解现代密码学奠定了基础。</li>
+                    <li>跨学科应用：在数学、计算机科学、语言学等领域，凯撒密码常被用作教学案例，帮助学生掌握编码、解码和统计分析技能。</li>
+                    <li>文化符号：在文学、电影和游戏中，凯撒密码常被赋予神秘色彩，成为解谜和冒险故事的重要元素。</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="section final-section">
+        <p>从凯撒密码的字母位移，到现代量子加密的量子态操控，人类对信息安全的追求从未停歇。凯撒密码虽已不再用于实际通信，但它作为密码学发展史上的里程碑，提醒我们：真正的安全，永远建立在智慧与创新的基石之上。探索凯撒密码，不仅是追溯历史，更是理解密码学本质的钥匙。 无论是初学者还是资深研究者，都能在这一古老加密方法中找到灵感与启迪。</p>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hall with Navigater</title>
+    <script src="loading-interceptor.js"></script>
+<style>
+    body {
+  background-color: #111;
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+#cursor {
+    position: absolute;
+    width: 2px;
+    height: 24px;
+    background: #00AA00;
+    pointer-events: none;
+    opacity: 0;
+    animation: blink 0.5s infinite;
+    z-index: 10;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+#canvas {
+            position: absolute;
+        z-index: 1;  /* Canvas在底层 */
+        top: 0;
+        left: 0;
+        }
+
+.text-container {
+  font-size: 2.5rem;
+  font-weight: bold;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-shadow: 0 0 8px currentColor;
+  z-index: 100;
+  
+}
+
+.scrambling {
+  text-shadow: 0 0 12px currentColor;
+}
+
+.controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: rgba(0,0,0,0.7);
+  padding: 15px;
+  border: 1px solid #0f0;
+  max-width: 300px;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+  z-index: 100;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.control-group label {
+  margin-bottom: 5px;
+  font-size: 0.8rem;
+  color: #00ff88;
+}
+
+.btn, select, input[type="text"] {
+  padding: 8px 12px;
+  background-color: #333;
+  color: #0f0;
+  border: 1px solid #0f0;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+}
+
+.btn:hover {
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.custom-text {
+  width: 100%;
+  resize: none;
+  height: 60px;
+  background-color: #333;
+  color: #0f0;
+  border: 1px solid #0f0;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 10px;
+}
+
+.color-picker {
+  display: flex;
+  gap: 5px;
+}
+
+.color-input {
+  width: 50%;
+}
+
+.control-group:last-child {
+  margin-bottom: 0;
+}
+
+.control-group label span {
+  opacity: 0.8;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  height: 5px;
+  background: #333;
+  outline: none;
+}
+
+/* 滑块轨道 */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 5px;
+  background: #000000; /* 轨道颜色改为绿色 */
+  border: 1px solid #00ff00;
+}
+
+/* 滑块 */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #00ff00;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
+  box-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+}
+
+
+</style>
+<audio src="./SRC/music/index_bgm.MP3" loop ></audio>
+<audio id="clickSound" src="./SRC/music/di2.MP3" preload="auto"></audio>
+</head>
+<!-- 在body标签开头添加 -->
+<body>
+    <!-- 添加导航栏 -->
+    <nav class="nav-container">
+        <a href="./card.html" class="nav-item">ABOUT BUILDERS</a>
+        <a href="./log_in.html" class="nav-item">LOG IN / REGISTER</a>
+        <a href="./carousel.html" class="nav-item">CLASSICAL CIPHER HISTORY</a>
+        <a href="./encrypt.html" class="nav-item">En/Decryption DISPLAY </a>
+        <a href="./layout.html" class="nav-item">DECLARATION</a>
+        
+        <a href="./index.html" class="nav-item">BACK TO HOME PAGE</a>
+    </nav>
+
+    <!-- 在style标签中添加导航栏样式 -->
+    <style>
+        .nav-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-item {
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 18px;
+            text-transform: uppercase;
+            text-decoration: none;
+            text-shadow: 0 0 5px #00ff88;
+            padding: 8px 15px;
+            border: 1px solid #00ff88;
+            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 10px #00ff88;
+        }
+    </style>
+
+    <!-- 保持原有内容不变 -->
+    <div class="controls">
+        <div class="control-group">
+          <label for="charSet">Character Set:</label>
+          <select id="charSet" onchange="updateSettings()">
+            <option value="tech1">Tech/Code Symbols 1</option>
+            <option value="tech2">Tech/Code Symbols 2</option>
+            <option value="math">Math & Binary</option>
+            <option value="cryptic">Cryptic/Alien</option>
+            <option value="mixed">Mixed Languages</option>
+            <option value="alphabet">Alphabet</option>
+            <option value="matrix1">Matrix 1</option>
+            <option value="matrix2">Matrix 2</option>
+            <option value="matrix3">Chinese Characters</option>
+            <option value="matrix4">Japanese Kanji</option>
+            <option value="emoji1">Emoji 1</option>
+            <option value="emoji2">Emoji 2</option>
+            <option value="emoji3">Emoji 3</option>
+          </select>
+        </div>
+        
+        <div class="control-group">
+          <label for="customText">Edit Your Own Slogan:</label>
+          <textarea id="customText" class="custom-text" placeholder="Enter custom text..."></textarea>
+        </div>
+        
+        <div class="control-group">
+          <label for="revealSpeed">Reveal Speed:</label>
+          <input type="range" id="revealSpeed" min="1" max="10" value="10" onchange="updateSettings()">
+        </div>
+        
+        <div class="control-group">
+          <label for="changeFreq">Change Frequency:</label>
+          <input type="range" id="changeFreq" min="1" max="100" value="28" onchange="updateSettings()">
+        </div>
+        
+        <div class="control-group">
+          <label for="glowIntensity">Glow Intensity</label>
+          <input type="range" id="glowIntensity" min="0" max="20" value="8" onchange="updateGlow()">
+        </div>
+        
+        <div class="control-group">
+          <label>Colors:</label>
+          <div class="color-picker">
+            <input type="color" id="bgColor" value="#00aa00" class="color-input" onchange="updateColors()">
+            <input type="color" id="textColor" value="#00ff00" class="color-input" onchange="updateColors()">
+          </div>
+        </div>
+        
+        <button class="btn" onclick="playAnimation()">Reveal Text</button>
+      </div>
+      <div class="text-container" id="text"></div>
+
+      <canvas id="canvas"></canvas>
+    <div id="text"></div>
+   
+</body>
+<script>
+    class TextScramble {
+  constructor(el) {
+    this.el = el;
+    this.charSets = {
+      tech1: '!<>-_\\/[]{}—=+*^?#________',
+      tech2: '!<>-_\\/[]{}—=+*^?#$%&()~',
+      math: '0111001011011+=-×÷',
+      cryptic: '¥¤§Ω∑∆√∞≈≠≤≥',
+      mixed: 'あ㐀明る日¥£€$¢₽₹₿',
+      alphabet: 'abcdefghijklmnopqrstuvwxyz',
+      matrix1: 'ラドクリフマラソンわたしワタシんょンョたばこタバコとうきょうトウキョウ',
+      matrix2: '日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ',
+      matrix3: '字型大小女巧偉周年',
+      matrix4: '九七二人入八力十下三千上口土夕大女子小山川五天中六円手文日月木水火犬王正出本右四左玉生田白目石立百年休先名字早気竹糸耳虫村男町花見貝赤足車学林空金雨青草音',
+      emoji1: Array.from('😀😁😂🤣😃😄😅😆😉😊😋😎😍😘🥰😗😙😚🤗🤔😐😑😶🙄😏😮😯😲😴🤤🤤😪😵🤯🤪🤩🥳🥺🥵🥴🥺'),
+      emoji2: Array.from('🏠🏢🏥🏦🏨🏫🏬🏭🏯🏰🏟️🎡🎢🎠⛲🎪🗼🗽🗿🌉'),
+      emoji3: Array.from('🍎🍊🍋🍌🍉🍇🍓🍈🍒🍑🥭🍍🥥🥝🥑🍆🥕🌽🌶️🍄🌰🍞')
+    };
+    this.chars = this.charSets.tech1;
+    this.update = this.update.bind(this);
+    this.revealSpeed = 1;
+    this.changeFrequency = 0.28;
+    this.highlightColor = '#00ff88';
+    this.glowIntensity = 8;
+    this.activeGlowIntensity = 12;
+  }
+
+  setCharSet(setName) {
+    if (this.charSets[setName]) {
+      this.chars = this.charSets[setName];
+      return true;
+    }
+    return false;
+  }
+
+  setRevealSpeed(speed) {
+    // 1-10 scale, lower is faster
+    this.revealSpeed = 11 - speed;
+  }
+
+  setChangeFrequency(freq) {
+    // 1-100 scale
+    this.changeFrequency = freq / 100;
+  }
+
+  setHighlightColor(color) {
+    this.highlightColor = color;
+  }
+
+  setGlowIntensity(intensity) {
+    this.glowIntensity = intensity;
+    this.activeGlowIntensity = intensity + 4;
+    document.getElementById('text').style.textShadow = `0 0 ${intensity}px currentColor`;
+  }
+
+  setText(newText) {
+    const oldText = this.el.innerText;
+    const length = Math.max(oldText.length, newText.length);
+    const promise = new Promise(resolve => this.resolve = resolve);
+    this.queue = [];
+
+    for (let i = 0; i < length; i++) {
+      const from = oldText[i] || '';
+      const to = newText[i] || '';
+      const start = Math.floor(Math.random() * (40 / this.revealSpeed));
+      const end = start + Math.floor(Math.random() * (40 / this.revealSpeed));
+      this.queue.push({ from, to, start, end });
+    }
+
+    cancelAnimationFrame(this.frameRequest);
+    this.frame = 0;
+    this.update();
+    return promise;
+  }
+
+  update() {
+    let output = '';
+    let complete = 0;
+
+    for (let i = 0, n = this.queue.length; i < n; i++) {
+      let { from, to, start, end, char } = this.queue[i];
+
+      if (this.frame >= end) {
+        complete++;
+        output += to;
+      } else if (this.frame >= start) {
+        if (!char || Math.random() < this.changeFrequency) {
+          char = this.randomChar();
+          this.queue[i].char = char;
+        }
+        output += `<span class="scrambling" style="color: ${this.highlightColor}; text-shadow: 0 0 ${this.activeGlowIntensity}px currentColor;">${char}</span>`;
+      } else {
+        output += from;
+      }
+    }
+
+    this.el.innerHTML = output;
+
+    if (complete === this.queue.length) {
+      this.resolve();
+    } else {
+      this.frameRequest = requestAnimationFrame(this.update);
+      this.frame++;
+    }
+  }
+
+  randomChar() {
+    return this.chars[Math.floor(Math.random() * this.chars.length)];
+  }
+}
+
+const phrases = [
+  'Hello World',
+  'Secret Message Revealed',
+  'Access Granted',
+  'System Online',
+  'System Failure',
+  'Loading Complete',
+  'Keep Coding',
+  'Take the Red Pill',
+  'The Matrix Has You...',
+  'Do not Say We Having Nothing at All',
+  'We Will Format the World',
+  'The Truth is the most Powerful Weapon',
+  'sudo you love our web',
+  'What if I Told You that Everything You Know is a Lie'
+
+];
+
+let counter = 0;
+const el = document.getElementById('text');
+const fx = new TextScramble(el);
+
+function updateSettings() {
+  const charSet = document.getElementById('charSet').value;
+  const revealSpeed = parseInt(document.getElementById('revealSpeed').value);
+  const changeFreq = parseInt(document.getElementById('changeFreq').value);
+
+  fx.setCharSet(charSet);
+  fx.setRevealSpeed(revealSpeed);
+  fx.setChangeFrequency(changeFreq);
+}
+
+// 在updateColors函数中添加以下代码
+function updateColors() {
+  const bgColor = document.getElementById('bgColor').value;
+  const textColor = document.getElementById('textColor').value;
+
+  document.body.style.backgroundColor = bgColor;
+  document.body.style.color = textColor;
+  fx.setHighlightColor(shiftColor(textColor, 40));
+  
+  // 更新二进制流颜色
+  binaryColor = bgColor; // 将文字颜色选择器的值赋给二进制流颜色变量
+}
+
+// 修改二进制流动画部分，移除const声明使变量可修改
+
+
+function updateGlow() {
+  const glowIntensity = parseInt(document.getElementById('glowIntensity').value);
+  fx.setGlowIntensity(glowIntensity);
+}
+
+function shiftColor(hex, lightnessDelta) {
+  // Simple function to shift a color's lightness
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  const shift = (c) => {
+    const newVal = Math.min(255, c + lightnessDelta);
+    return newVal.toString(16).padStart(2, '0');
+  };
+
+  return `#${shift(r)}${shift(g)}${shift(b)}`;
+}
+
+function playAnimation() {
+  const customText = document.getElementById('customText').value.trim();
+  const text = customText || phrases[counter];
+
+  fx.setText(text).then(() => {
+    setTimeout(() => {
+      if (!customText) {
+        counter = (counter + 1) % phrases.length;
+      }
+    }, 2000);
+  });
+}
+
+// Set initial colors
+updateColors();
+// Set initial settings
+updateSettings();
+// Set initial glow
+updateGlow();
+
+// Initial animation
+setTimeout(playAnimation, 1000);
+</script>
+<script>
+  // 二进制流背景动画
+  let canvas, ctx;
+  let fontSize = 10;
+  let columns, drops;
+  const binaryChars = ['0', '1'];
+  const streamSpeed = 5;
+let binaryColor='#00AA00';
+
+  function initCanvas() {
+      canvas = document.getElementById('canvas');
+      ctx = canvas.getContext('2d');
+      resizeCanvas();
+      
+      // 初始化drops数组
+      drops = new Array(columns).fill(1);
+  }
+
+  function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = Math.floor(canvas.width / fontSize);
+      drops = new Array(columns).fill(1);
+  }
+
+  function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = binaryColor;
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+          const text = binaryChars[Math.floor(Math.random() * binaryChars.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
+          }
+          drops[i] += streamSpeed / 5;
+      }
+  }
+
+  function animate() {
+      draw();
+      requestAnimationFrame(animate);
+  }
+
+  // 初始化并监听窗口大小变化
+  window.addEventListener('load', () => {
+      initCanvas();
+      animate();
+  });
+
+  window.addEventListener('resize', () => {
+      resizeCanvas();
+  });
+</script>
+<script>
+    const cursor = document.createElement('div');
+cursor.id = 'cursor';
+document.body.appendChild(cursor);
+
+
+
+function updateCursorPosition(e) {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    isVisible = true;
+    if (animationPaused) {
+        cursor.style.animationPlayState = 'running';
+        animationPaused = false;
+    }
+}
+
+function hideCursor() {
+    isVisible = false;
+    cursor.style.animationPlayState = 'paused';
+    animationPaused = true;
+}
+
+window.addEventListener('mousemove', updateCursorPosition);
+window.addEventListener('mouseout', hideCursor);
+
+function animateCursor() {
+    cursor.style.display = isVisible ? 'block' : 'none';
+    requestAnimationFrame(animateCursor);
+}
+animateCursor();
+// 在页面加载时恢复音乐状态
+document.addEventListener('DOMContentLoaded', function() {
+    const bgm = document.querySelector('audio[src*="index_bgm.MP3"]');
+    const savedTime = localStorage.getItem('bgmTime');
+    const wasPlaying = localStorage.getItem('bgmPlaying') === 'true';
+    
+    if (savedTime && bgm) {
+        bgm.currentTime = parseFloat(savedTime);
+        if (wasPlaying) {
+            bgm.play().catch(e => console.log('Autoplay prevented:', e));
+        }
+    }
+    
+    // 点击音效
+    const clickSound = document.getElementById('clickSound');
+    document.addEventListener('click', function() {
+        clickSound.currentTime = 0;
+        clickSound.play();
+    });
+});
+</script>//
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const bgm = document.querySelector('audio[src*="index_bgm.MP3"]');
+    const savedTime = localStorage.getItem('bgmTime');
+    const wasPlaying = localStorage.getItem('bgmPlaying') === 'true';
+    
+    if (savedTime && bgm) {
+        bgm.currentTime = parseFloat(savedTime);
+        if (wasPlaying) {
+            bgm.play().catch(e => console.log('Autoplay prevented:', e));
+        }
+    }
+    
+    // 点击音效
+    const clickSound = document.getElementById('clickSound');
+    document.addEventListener('click', function() {
+        clickSound.currentTime = 0;
+        clickSound.play();
+    });
+});
+</script>
+</html>

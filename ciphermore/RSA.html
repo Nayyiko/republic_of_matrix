@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA算法介绍</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: normal;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #000000;
+            position: relative;
+            overflow: auto;
+        }
+
+        /* 背景字母数字装饰 */
+        body::before {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite;
+        }
+ body::after {
+            content: "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            position: absolute;
+            top: 125px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 50px;
+            color: rgba(99, 202, 212, 0.336);
+            z-index: -1;
+            white-space: nowrap;
+            animation: slide 30s linear infinite reverse;
+        }
+    
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+
+        h1 {
+            font-size: 100px;
+            text-align: center;
+            padding: 0px 20px;
+            color: #ceeac7;
+            font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+            text-shadow: 
+                1px 1px 0 hsl(113, 69%, 66%),
+                2px 2px 0 #5aed6e,
+                3px 3px 0 #5aed6e,
+                4px 4px 0 #7cfb8d,
+                5px 5px 0 #7cfb8d,
+                6px 6px 0 #7cfb8d,
+              
+                0 0 10px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section {
+            padding: 30px;
+            margin: 30px;
+            border-radius: 10px;
+            background-color: #014520;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        
+            color: #ceeac7;
+        }
+
+        p {
+            text-indent: 2em;
+            margin-bottom: 15px;
+            color: #e0c993;
+        }
+
+        ul,
+        ol {
+            margin-left: 20px;
+            color: #e0c993;
+        }
+
+        .separator {
+            border-left: 2px solid #000;
+            height: 100%;
+            margin: 0 30px;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-section {
+            width: 50%;
+        }
+
+        .right-section {
+            width: 50%;
+        }
+
+        .principle img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .final-section {
+            clear: both;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+           .main-content {
+                flex-direction: column;
+            }
+
+           .left-section,
+           .right-section {
+                width: 100%;
+            }
+
+           .separator {
+                border-left: none;
+                border-top: 2px solid #000;
+                height: auto;
+                margin: 30px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <body>
+        <a href="../carousel.html" style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background-color: transparent;
+        color: #d6e68e;
+        text-decoration: none;
+        border-radius: 8px;
+        z-index: 1000;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+    ">BACK</a>
+    <h1>RSA</h1>
+    <div class="section origin">
+        <h2>RSA起源：从学术猜想到安全标准</h2>
+        <p>作为公钥密码学的开创者，RSA以三位发明者的姓氏命名，凭借其数学严谨性与实际应用价值，成为保障数字安全的核心技术。1977年，罗纳德·李维斯特、阿迪·萨莫尔和伦纳德·阿德曼在麻省理工学院共同提出RSA算法。这一创新解决了公钥加密的核心难题：在公开密钥的情况下确保信息传输的安全性</p>
+    </div>
+    <div class="main-content">
+        <div class="left-section">
+            <div class="section principle">
+                <h2>核心原理和加解密</h2>
+                <p>RSA的安全性基于大整数分解难题：给定两个大素数 p 和 q 的乘积 n = p×q，以及欧拉函数 ϕ(n)=(p−1)(q−1)，在已知 n 的情况下，分解 n 为 p 和 q 极其困难。</p>
+                <p>算法参数：</p>
+                <ul>
+                    <li>公钥：(n, e)，其中 e 是与 ϕ(n) 互质的整数。</li>
+                    <li>私钥：(n, d)，其中 d 是 e 在模 ϕ(n) 下的乘法逆元（即 e×d ≡ 1 mod ϕ(n)）。</li>
+                </ul>
+                <p>加解密过程：</p>
+                <p>1. 密钥生成：</p>
+                <ul>
+                    <li>随机选择两个大素数 p 和 q。</li>
+                    <li>计算 n = p×q 和 ϕ(n)=(p−1)(q−1)。</li>
+                    <li>选择整数 e，满足 1 < e < ϕ(n) 且 gcd(e, ϕ(n)) = 1。</li>
+                    <li>计算 d，使得 e×d ≡ 1 mod ϕ(n)。</li>
+                    <li>示例：</li>
+                    <p>p = 61，q = 53，则 n = 3233，ϕ(n) = 3120。</p>
+                    <p>选择 e = 17，计算 d = 2753（因 17×2753 mod 3120 = 1）。</p>
+                </ul>
+                <p>2. 加密：</p>
+                <ul>
+                    <li>接收方公开公钥 (n, e)。</li>
+                    <li>发送方将消息 m 转换为整数（如ASCII编码），并计算密文 c ≡ mᵉ mod n。</li>
+                    <li>示例：</li>
+                    <p>若 m = 65（ASCII码为‘A’），则 c = 65¹⁷ mod 3233 = 2790。</p>
+                </ul>
+                <p>3. 解密：</p>
+                <p>接收方使用私钥 (n, d) 计算 m ≡ cᵈ mod n。</p>
+                <img src="../SRC/pic/RSA.jpg" alt="RSA加密">
+            </div>
+        </div>
+        <div class="separator"></div>
+        <div class="right-section">
+            <div class="section limitation">
+                <h2>优点与缺点</h2>
+                <p>优势：</p>
+                <ul>
+                    <li>安全性：依赖大数分解难题，抗量子计算攻击（需结合后量子算法）。</li>
+                    <li>标准化：被国际标准广泛采用，兼容性强。</li>
+                    <li>多功能性：支持加密、数字签名与密钥交换。</li>
+                </ul>
+                <p>局限：</p>
+                <ul>
+                    <li>密钥长度：为抵御计算能力提升，密钥需不断增长（如2048位、4096位），导致性能下降。</li>
+                    <li>性能瓶颈：模幂运算耗时，不适用于资源受限设备。</li>
+                    <li>中间人攻击风险：若公钥分发不安全，可能导致密钥泄露。</li>
+                </ul>
+            </div>
+            <div class="section value">
+                <h2>文化与历史影响</h2>
+                <p>1. 技术革命：</p>
+                <ul>
+                    <li>SSL/TLS：RSA是HTTPS加密的核心，保护全球90%以上的网站通信。</li>
+                    <li>区块链：比特币等加密货币使用RSA实现数字签名与地址验证。</li>
+                    <li>物联网：RSA为智能设备提供身份认证与数据加密。</li>
+                </ul>
+                <p>2. 学术影响：</p>
+                <ul>
+                    <li>启发其他算法：RSA的数学框架为ElGamal、ECC等算法提供灵感。</li>
+                    <li>推动密码学教育：成为高校密码学课程的经典案例。</li>
+                </ul>
+                <p>3. 社会影响：</p>
+                <ul>
+                    <li>隐私保护：RSA为个人数据加密提供技术基础，促进网络言论自由。</li>
+                    <li>信任机制：数字签名技术使电子合同、在线投票成为可能。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="section final-section">
+        <p>尽管量子计算的威胁日益临近，RSA仍以其数学优雅性与实用性，在数字世界中占据不可替代的地位。其核心思想——“通过数学难题实现安全”——不仅推动了密码学的发展，更启发了人类对安全与隐私的深层思考。</p>
+    </div>
+</body>
+
+</html>    

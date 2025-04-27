@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome To REPUBLIC OF MATRIX</title>
+    
+    <script src="loading-interceptor.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            color: #0F0;
+        }
+
+        #canvas {
+            position: absolute;
+        z-index: 1;  /* Canvas在底层 */
+        top: 0;
+        left: 0;
+        }
+
+        #cursor {
+            position: absolute;
+            width: 2px;
+            height: 24px;
+            background: #00AA00;
+            pointer-events: none;
+            opacity: 0;
+            animation: blink 0.5s infinite;
+            z-index: 50;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
+ <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
+html, body {
+font-family: "Montserrat", sans-serif;
+font-optical-sizing: auto;
+font-weight: 900;
+font-style: normal;
+background:#000;
+overflow:hidden;
+}
+
+svg {
+    position: absolute;
+        z-index: 10;  /* 确保SVG在Canvas上方 */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+}
+</style>
+<audio src="./SRC/music/index_bgm.MP3" autoplay loop></audio>
+<audio id="clickSound" src="./SRC/music/di2.MP3" preload="auto"></audio>
+</head>
+
+<body>
+    <svg viewBox="0 0 1280 720">
+       
+    
+        <style>
+            .right {
+                filter: drop-shadow(0 0 3px rgba(0, 255, 0, 0.7)) 
+                        drop-shadow(0 0 6px rgba(0, 255, 0, 0.5));
+            }
+            
+            .left {
+                filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.5))
+                        drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+            }
+        </style>
+
+        <!-- 保持现有SVG结构不变 -->
+        <g font-size="150">
+            <g mask="url(#maskRight)" fill="#00aa00" class="right">
+                <text y="120">REPUBLIC</text>
+                <text y="250">OF</text>
+                <text y="380">MATRIX</text>
+            </g>
+            <g mask="url(#maskLeft)" fill="#fff" class="left">
+                <text y="110">REPUBLIC</text>
+                <text y="240">OF</text>
+                <text y="370">MATRIX</text>
+            </g>
+        </g>
+      </svg>
+
+        <!-- 在body标签内canvas元素后添加 -->
+    <canvas id="canvas"></canvas>
+    <div id="enter-text">CLICK TO ENTER MATRIX</div>
+    <div id="text"></div>
+    
+    <!-- 在style标签中添加样式 -->
+    <style>
+        #enter-text {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00FF00;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            text-align: center;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.7));
+            animation: pulse 2s infinite;
+            cursor: pointer;
+            z-index: 20;
+        }
+    
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+    </style>
+   <script>
+    // 二进制流背景动画
+    let canvas, ctx;
+    let fontSize = 10;
+    let columns, drops;
+    const binaryChars = ['0', '1'];
+    const streamSpeed = 5;
+    const binaryColor = '#00AA00';
+
+    function initCanvas() {
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext('2d');
+        resizeCanvas();
+        
+        // 初始化drops数组
+        drops = new Array(columns).fill(1);
+    }
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        columns = Math.floor(canvas.width / fontSize);
+        drops = new Array(columns).fill(1);
+    }
+
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = binaryColor;
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = binaryChars[Math.floor(Math.random() * binaryChars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i] += streamSpeed / 5;
+        }
+    }
+
+    function animate() {
+        draw();
+        requestAnimationFrame(animate);
+    }
+
+    // 初始化并监听窗口大小变化
+    window.addEventListener('load', () => {
+        initCanvas();
+        animate();
+    });
+
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+    });
+</script>
+</body>
+<script>
+   
+
+    // 添加点击音效
+    const clickSound = document.getElementById('clickSound');
+    
+    document.addEventListener('click', function() {
+        clickSound.currentTime = 0; // 重置播放位置
+        clickSound.play();
+    });
+
+    // 确保页面加载完成后才能播放音频
+    document.addEventListener('DOMContentLoaded', function() {
+        // 用户首次交互后解锁音频
+        document.body.addEventListener('click', function() {
+            clickSound.play().then(() => {
+                clickSound.pause();
+                clickSound.currentTime = 0;
+            });
+        }, { once: true });
+    });
+      // 在script中添加点击事件
+        // 替换原有的点击事件
+        document.getElementById('enter-text').addEventListener('click', function() {
+        // 获取当前背景音乐
+        const bgm = document.querySelector('audio[src*="index_bgm.MP3"]');
+        const clickSound = document.getElementById('clickSound');
+        
+        // 播放点击音效
+        clickSound.currentTime = 0;
+        clickSound.play();
+        
+        // 保存当前音乐状态
+        localStorage.setItem('bgmTime', bgm.currentTime);
+        localStorage.setItem('bgmPlaying', !bgm.paused);
+        
+        // 延迟跳转确保音效播放
+        setTimeout(() => {
+            window.location.href = 'text.html';
+        }, 300);
+        });
+</script>
+</html>
